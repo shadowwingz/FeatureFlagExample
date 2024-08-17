@@ -4,10 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.jeroenmols.featureflag.example.R
-import kotlinx.android.synthetic.main.fragment_testsettings.*
+import com.jeroenmols.featureflag.example.databinding.FragmentTestsettingsBinding
 
 class TestSettingsFragment : androidx.fragment.app.Fragment() {
+
+    private lateinit var binding: FragmentTestsettingsBinding
 
     interface TestSettingsListener {
         fun onFeatureToggleClicked()
@@ -16,14 +17,17 @@ class TestSettingsFragment : androidx.fragment.app.Fragment() {
 
     var testSettingListener: TestSettingsListener? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        inflater.inflate(R.layout.fragment_testsettings, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentTestsettingsBinding.inflate(inflater)
+        val view = binding.root
+        return view
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        textview_testsettings_featuretoggle.setOnClickListener { testSettingListener?.onFeatureToggleClicked() }
-        formattextview_testsettings_testsetting.setOnClickListener { testSettingListener?.onTestSettingClicked() }
+        binding.textviewTestsettingsFeaturetoggle.setOnClickListener { testSettingListener?.onFeatureToggleClicked() }
+        binding.formattextviewTestsettingsTestsetting.setOnClickListener { testSettingListener?.onTestSettingClicked() }
     }
 
     override fun onResume() {

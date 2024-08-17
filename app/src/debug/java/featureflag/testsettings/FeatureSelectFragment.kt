@@ -10,18 +10,23 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.jeroenmols.featureflag.example.R
+import com.jeroenmols.featureflag.example.databinding.FragmentFeatureflagBinding
 import com.jeroenmols.featureflag.framework.*
-import kotlinx.android.synthetic.main.fragment_featureflag.*
 import kotlin.system.exitProcess
 
 internal class FeatureSelectFragment : androidx.fragment.app.Fragment() {
+
+    private lateinit var binding: FragmentFeatureflagBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_featureflag, container, false)
+    ): View? {
+        binding = FragmentFeatureflagBinding.inflate(inflater)
+        val view = binding.root
+        return view
+    }
 
     override fun onResume() {
         super.onResume()
@@ -30,27 +35,27 @@ internal class FeatureSelectFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun initializeRecyclerView() {
-        val runtimeFeatureFlagProvider = RuntimeFeatureFlagProvider(context!!)
+        val runtimeFeatureFlagProvider = RuntimeFeatureFlagProvider(requireContext())
         val checkedListener = { feature: Feature, enabled: Boolean ->
             runtimeFeatureFlagProvider.setFeatureEnabled(feature, enabled)
             requestRestart()
         }
         if (useTestSettings()) {
-            recyclerview_featureflag.adapter =
+            binding.recyclerviewFeatureflag.adapter =
                 FeatureFlagAdapter(
                     TestSetting.values(),
                     runtimeFeatureFlagProvider,
                     checkedListener
                 )
         } else {
-            recyclerview_featureflag.adapter =
+            binding.recyclerviewFeatureflag.adapter =
                 FeatureFlagAdapter(
                     FeatureFlag.values(),
                     runtimeFeatureFlagProvider,
                     checkedListener
                 )
         }
-        recyclerview_featureflag.layoutManager =
+        binding.recyclerviewFeatureflag.layoutManager =
             androidx.recyclerview.widget.LinearLayoutManager(context)
     }
 
@@ -67,7 +72,7 @@ internal class FeatureSelectFragment : androidx.fragment.app.Fragment() {
 
     private fun requestRestart() {
         val msg = "In order for changes to reflect please restart the app via settings"
-        val snackbar = Snackbar.make(view!!, msg, Snackbar.LENGTH_INDEFINITE)
+        val snackbar = Snackbar.make(requireView(), msg, Snackbar.LENGTH_INDEFINITE)
             .setActionTextColor(Color.RED)
             .setAction("Force Stop") {
                 exitProcess(-1)

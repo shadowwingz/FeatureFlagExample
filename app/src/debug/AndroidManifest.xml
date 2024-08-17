@@ -5,6 +5,7 @@
 
         <activity
             android:name="com.jeroenmols.featureflag.testsettings.TestSettingsActivity"
+            android:exported="true"
             android:label="@string/app_testsettings"
             android:icon="@mipmap/ic_testlauncher"
             android:launchMode="singleInstance"
